@@ -36,8 +36,9 @@ def parse_receipt(update, context):
                              text="Parsing receipt",
                              parse_mode='HTML')
 
-    output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
-    print(output)
+    # output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
+    # print(output)
+    print(open("{}.jpg".format(file_id)))
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start your bill splitting process here: \nLink Here",
                              parse_mode='HTML')
