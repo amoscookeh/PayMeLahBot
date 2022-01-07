@@ -9,7 +9,7 @@ from helper_functions import format_line_items
 
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
-WEBAPP_LINK = 'localhost:3000/split/'
+WEBAPP_LINK = 'http://localhost:3000/split'
 
 
 # First time starting the bot
