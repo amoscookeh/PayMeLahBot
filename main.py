@@ -18,7 +18,7 @@ receipt_parsing = ConversationHandler(
     states={
         PARSE: [
             MessageHandler(
-                Filters.document.mime_type("jpg"), parse_receipt
+                Filters.document.file_extension("jpg"), parse_receipt
             )
         ],
     },
