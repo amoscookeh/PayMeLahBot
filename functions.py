@@ -28,7 +28,7 @@ def ask_for_receipt(update, context):
 
 
 def parse_receipt(update, context):
-    receipt_photo = update.message.photo
+    receipt_photo = update.message.photo[0]
     file_id = receipt_photo.file_id
     photo_file = context.bot.get_file(file_id).download("{}.jpg".format(file_id))
     print(photo_file)
