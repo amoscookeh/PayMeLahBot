@@ -17,6 +17,7 @@ PARSE = range(1)
 
 
 def ask_for_receipt(update, context):
+    print(update.message.photo)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Send me image of your receipt",
                              parse_mode='HTML')
@@ -25,7 +26,7 @@ def ask_for_receipt(update, context):
 
 def parse_receipt(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Send me image of your receipt",
+                             text="Start your bill splitting process here: \n<Link>",
                              parse_mode='HTML')
     return ConversationHandler.END
 
