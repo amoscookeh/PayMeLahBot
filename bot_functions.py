@@ -10,12 +10,13 @@ from helper_functions import format_line_items
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
 WEBAPP_LINK = 'http://www.google.com/split'
 
+money_emoji = '\U0001F4B8'
 
 # First time starting the bot
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Welcome to PayMeLah Bot! {}{}{}{}{}".format(u'\U+1F4B8', u'\U+1F4B8', u'\U+1F4B8',
-                                                                               u'\U+1F4B8', u'\U+1F4B8'))
+                             text="Welcome to PayMeLah Bot! {}{}{}{}{}".format(money_emoji, money_emoji, money_emoji,
+                                                                               money_emoji, money_emoji))
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start the bill splitting process with one of the following commands: "
                                   + "\n\n/upload - Upload a receipt image to be parsed"
