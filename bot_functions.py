@@ -152,7 +152,7 @@ def help(update, context):
                              text="<b>Welcome to PayMeLah Bot!\n\nThere are 2 simple ways "
                                   "to get me to help you! </b>\n\n<b>/upload : </b>"
                                   "Upload an image of the receipt that you wish to split and let us parse it for you! "
-                                  "After which, we will drop you a link to our bill splitting web application to continue"
+                                  "After which, we will drop you a link to our bill splitting web application to continue "
                                   "the bill splitting process!"
                                   "\n\n<b>/split : </b>"
                                   "Simply tap on the link sent to you and you can begin your bill splitting process!"
@@ -195,6 +195,6 @@ def manage_query(update, context):
     else:
         parse_receipts(update, context)
 
-    context.bot.edit_reply_markup(chat_id=update.effective_chat.id,
+    context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id,
                                   message_id=query.message.message_id,
                                   reply_markup=InlineKeyboardMarkup([]))
