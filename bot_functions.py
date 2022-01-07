@@ -1,11 +1,11 @@
 from telegram.ext import ConversationHandler
+from telegram import ParseMode
 import os
 import time
 import json
 import base64
 from tabscanner_functions import callProcess, callResult
 from helper_functions import format_line_items
-
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
 WEBAPP_LINK = 'http://localhost:3000/split'
@@ -47,7 +47,7 @@ def parse_receipt(update, context):
 
     time.sleep(7)
     result = callResult(TABSCANNER_TOKEN, output_token)
-    while(result['status'] == 'pending'):
+    while (result['status'] == 'pending'):
         time.sleep(3)
         result = callResult(TABSCANNER_TOKEN, output_token)
     if (result['status'] == 'failed'):
@@ -64,10 +64,11 @@ def parse_receipt(update, context):
         encoded_utf = stringified_data.encode('utf-8')
         encoded_base64 = base64.b64encode(encoded_utf)
         url = "{}/{}".format(WEBAPP_LINK, str(encoded_base64)[2:-1])
+        message = "<i>Start your bill splitting process</i> <a href='{}'>here</a>".format(url)
+        print(message)
         context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="<b>Start your bill splitting process </b>"
-                                  "<a href='{}'>here</a>".format(url),
-                             parse_mode='HTML')
+                                 text=message,
+                                 parse_mode=ParseMode.HTML)
     return ConversationHandler.END
 
 
