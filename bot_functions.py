@@ -190,11 +190,11 @@ def manage_query(update, context):
     query = update.callback_query
     query.answer()
 
+    context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id,
+                                          message_id=query.message.message_id,
+                                          reply_markup=InlineKeyboardMarkup([]))
+
     if (query.data == 'y'):
         ask_for_receipt(update, context)
     else:
         parse_receipts(update, context)
-
-    context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id,
-                                  message_id=query.message.message_id,
-                                  reply_markup=InlineKeyboardMarkup([]))
