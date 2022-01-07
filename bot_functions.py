@@ -8,7 +8,7 @@ from tabscanner_functions import callProcess, callResult
 from helper_functions import format_line_items
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
-WEBAPP_LINK = 'http://www.google.com/split'
+WEBAPP_LINK = 'https://paymelah.vercel.app/split'
 
 money_emoji = '\U0001F4B8'
 receipt_emoji = '\U0001F9FE'
