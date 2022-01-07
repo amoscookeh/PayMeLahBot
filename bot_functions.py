@@ -78,6 +78,7 @@ def parse_receipt(update, context):
                                      text="Image parsing failed {}... Try sending a clearer image or use /split to "
                                           "start splitting anyway".format(sad_shocked_emoji),
                                      parse_mode='HTML')
+            return ConversationHandler.END
         stringified_data = json.dumps(data)
         encoded_utf = stringified_data.encode('utf-8')
         encoded_base64 = base64.b64encode(encoded_utf)
