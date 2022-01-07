@@ -1,5 +1,8 @@
+from uuid import uuid4
+
 from telegram.ext import ConversationHandler
-from telegram import ParseMode
+from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup, \
+    InlineKeyboardButton
 import os
 import time
 import json
@@ -29,64 +32,93 @@ def start(update, context):
                                   + "\n/split {} - Begin bill splitting without receipt parsing".format(divide_emoji))
 
 
-PARSE = range(1)
+PARSE, ADDMORE = range(2)
 
 
 def ask_for_receipt(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Please send me a clear image of your {} Receipt {}".format(receipt_emoji,
                                                                                               receipt_emoji))
+    context.user_data["receipts"] = []
     return PARSE
 
 
 def parse_receipt(update, context):
     receipt_photo = update.message.photo[-1]
     file_id = receipt_photo.file_id
-    photo = context.bot.get_file(file_id)
-    photo.download("{}.jpg".format(file_id))
+
+    photos = context.user_data["receipts"]
+    photos.append(file_id)
+    context.user_data["receipts"] = photos
+
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="Do you wish to upload another receipt?",
+                             reply_markup=add_suggested_actions(update, context))
+
+    return ADDMORE
+
+
+def add_more(update, context):
+    response = update.callback_query.data
+    if (response == 'y'):
+        return PARSE
+
+    photos = context.user_data["receipts"]
+    output_tokens = []
+    compiled_line_items = []
+
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="The {}Robots{} have begun parsing your receipt...".format(robot_emoji, robot_emoji),
                              parse_mode='HTML')
+    for file_id in photos:
+        photo = context.bot.get_file(file_id)
+        photo.download("{}.jpg".format(file_id))
+        output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
+        status = output['status']
+        output_token = output['token']
+        output_tokens.append(output_token)
 
-    output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
-    status = output['status']
-    output_token = output['token']
-
-    if status != 'success':
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="Image parsing failed {}".format(sad_shocked_emoji),
-                                 parse_mode='HTML')
+        if status != 'success':
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="Image parsing failed {}".format(sad_shocked_emoji),
+                                     parse_mode='HTML')
 
     countdown(update, context, 7)
 
-    result = callResult(TABSCANNER_TOKEN, output_token)
-    while result['status'] == 'pending':
-        time.sleep(2)
+    for output_token in output_tokens:
         result = callResult(TABSCANNER_TOKEN, output_token)
-    if result['status'] == 'failed':
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="Image parsing failed {}".format(sad_shocked_emoji),
-                                 parse_mode='HTML')
-    else:
-        data = {
-            'lineItems': format_line_items(result),
-            'chatId': update.effective_chat.id,
-            'users': [update.effective_user.username]
-        }
-        if len(data['lineItems']) < 1:
+        while result['status'] == 'pending':
+            time.sleep(2)
+            result = callResult(TABSCANNER_TOKEN, output_token)
+        if result['status'] == 'failed':
             context.bot.send_message(chat_id=update.effective_chat.id,
-                                     text="Image parsing failed {}... Try sending a clearer image or use /split to "
-                                          "start splitting anyway".format(sad_shocked_emoji),
+                                     text="Image parsing failed {}".format(sad_shocked_emoji),
                                      parse_mode='HTML')
             return ConversationHandler.END
-        stringified_data = json.dumps(data)
-        encoded_utf = stringified_data.encode('utf-8')
-        encoded_base64 = base64.b64encode(encoded_utf)
-        url = "{}/{}".format(WEBAPP_LINK, str(encoded_base64)[2:-1])
-        message = "Start your bill splitting process <a href='{}'>here</a>".format(url)
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text=message,
-                                 parse_mode=ParseMode.HTML)
+        else:
+            line_items = format_line_items(result)
+            if len(line_items) < 1:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text="Image parsing failed {}... Try sending a clearer image or use /split to "
+                                              "start splitting anyway".format(sad_shocked_emoji),
+                                         parse_mode='HTML')
+                return ConversationHandler.END
+            compiled_line_items.append(line_items)
+
+    data = {
+        'lineItems': compiled_line_items,
+        'chatId': update.effective_chat.id,
+        'users': [update.effective_user.username]
+    }
+
+    stringified_data = json.dumps(data)
+    encoded_utf = stringified_data.encode('utf-8')
+    encoded_base64 = base64.b64encode(encoded_utf)
+    url = "{}/{}".format(WEBAPP_LINK, str(encoded_base64)[2:-1])
+    message = "Start your bill splitting process <a href='{}'>here</a>".format(url)
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text=message,
+                             parse_mode=ParseMode.HTML)
     return ConversationHandler.END
 
 
@@ -141,3 +173,13 @@ def countdown(update, context, seconds):
                                       chat_id=update.effective_chat.id
                                       , message_id=message_id)
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id=message_id)
+
+
+def add_suggested_actions(update, context):
+    options = []
+
+    options.append(InlineKeyboardButton('Yes', callback_data='y'))
+    options.append(InlineKeyboardButton('No', callback_data='n'))
+
+    reply_markup = InlineKeyboardMarkup([options])
+    return reply_markup
