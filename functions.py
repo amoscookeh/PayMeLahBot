@@ -34,11 +34,13 @@ def parse_receipt(update, context):
     file_id = receipt_photo.file_id
     photo = context.bot.get_file(file_id)
     photo_file = photo.download("{}.jpg".format(file_id))
-    print(photo.width)
-    print(photo.height)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Parsing receipt",
                              parse_mode='HTML')
+
+    with open("{}.jpg".format(file_id), 'rb') as R:
+        context.bot.send_document(chat_id=update.effective_chat.id,
+                             document=R)
 
     # output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
     # status = output['status']
