@@ -1,5 +1,4 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, \
-    CallbackQueryHandler, DictPersistence
+from telegram.ext import ConversationHandler
 import os
 import time
 import json
@@ -66,7 +65,7 @@ def parse_receipt(update, context):
         encoded_base64 = base64.b64encode(encoded_utf)
         url = "{}/{}".format(WEBAPP_LINK, str(encoded_base64)[2:-1])
         context.bot.send_message(chat_id=update.effective_chat.id,
-                             text='Start your bill splitting process '
+                             text='<b>Start your bill splitting process </b>'
                                   '<a href="{}">here</a>'.format(url),
                              parse_mode='HTML')
     return ConversationHandler.END
