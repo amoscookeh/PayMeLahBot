@@ -104,15 +104,13 @@ def parse_receipts(update, context):
                                               "start splitting anyway".format(sad_shocked_emoji),
                                          parse_mode='HTML')
                 return ConversationHandler.END
-            compiled_line_items.append(line_items)
+            compiled_line_items.extend(line_items)
 
     data = {
         'lineItems': compiled_line_items,
         'chatId': update.effective_chat.id,
         'users': [update.effective_user.username]
     }
-
-    print(data['lineItems'])
 
     stringified_data = json.dumps(data)
     encoded_utf = stringified_data.encode('utf-8')
