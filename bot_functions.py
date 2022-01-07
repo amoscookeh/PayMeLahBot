@@ -91,5 +91,7 @@ def countdown(update, context, seconds):
     while (timer > 0):
         time.sleep(1)
         timer -= 1
-        context.bot.edit_message_text("{} seconds remaining...".format(timer), message_id=message_id)
+        context.bot.edit_message_text("{} seconds remaining...".format(timer),
+                                      chat_id=update.effective_chat.id
+                                      ,message_id=message_id)
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id=message_id)
