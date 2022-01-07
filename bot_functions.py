@@ -191,9 +191,6 @@ def manage_query(update, context):
     query.answer()
 
     if (query.data == 'y'):
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="Please send me another clear image of your {} Receipt {}".format(receipt_emoji,
-                                                                                                        receipt_emoji))
-        add_receipts(update, context)
+        ask_for_receipt(update, context)
     else:
         parse_receipts(update, context)
