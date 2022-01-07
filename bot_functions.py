@@ -73,6 +73,11 @@ def parse_receipt(update, context):
             'chatId': update.effective_chat.id,
             'users': [update.effective_user.username]
         }
+        if len(data['lineItems']) < 1:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="Image parsing failed {}... Try sending a clearer image or use /split to "
+                                          "start splitting anyway".format(sad_shocked_emoji),
+                                     parse_mode='HTML')
         stringified_data = json.dumps(data)
         encoded_utf = stringified_data.encode('utf-8')
         encoded_base64 = base64.b64encode(encoded_utf)
@@ -85,7 +90,16 @@ def parse_receipt(update, context):
 
 
 def split(update, context):
-    message = "Start your bill splitting process <a href='{}'>here</a>".format(WEBAPP_LINK)
+    data = {
+        'lineItems': [],
+        'chatId': update.effective_chat.id,
+        'users': [update.effective_user.username]
+    }
+    stringified_data = json.dumps(data)
+    encoded_utf = stringified_data.encode('utf-8')
+    encoded_base64 = base64.b64encode(encoded_utf)
+    url = "{}/{}".format(WEBAPP_LINK, str(encoded_base64)[2:-1])
+    message = "Start your bill splitting process <a href='{}'>here</a>".format(url)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text=message,
                              parse_mode=ParseMode.HTML)
