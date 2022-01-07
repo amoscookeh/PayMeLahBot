@@ -34,7 +34,7 @@ def main():
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
                           url_path=TOKEN)
-    # updater.bot.setWebhook('https://paymeplsbot.herokuapp.com/' + TOKEN)
+    updater.bot.setWebhook('https://paymelahbot.herokuapp.com/' + TOKEN)
 
     updater.idle()
 
