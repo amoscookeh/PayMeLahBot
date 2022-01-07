@@ -1,4 +1,5 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, CallbackQueryHandler, DictPersistence
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, \
+    CallbackQueryHandler, DictPersistence
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
 import os
 import logging
@@ -7,19 +8,22 @@ PORT = int(os.environ.get('PORT', 5000))
 TOKEN = os.environ['TOKEN']
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                     level=logging.INFO)
+                    level=logging.INFO)
+
 
 # First time starting the bot
-def start (update, context):
+def start(update, context):
     # format_user_data(update, context)
+    print("Here")
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Welcome to PayMeLah Bot! U+2728",
                              parse_mode='HTML')
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start the bill splitting process with one of the following commands: "
-                             + "\n\n/upload - Upload an image to be parsed"
-                             + "\n/split - Begin bill splitting without receipt parsing")
+                                  + "\n\n/upload - Upload an image to be parsed"
+                                  + "\n/split - Begin bill splitting without receipt parsing")
     # return USERNAME
+
 
 def main():
     updater = Updater(token=TOKEN, use_context=True)
@@ -37,6 +41,7 @@ def main():
     updater.bot.setWebhook('https://paymelahbot.herokuapp.com/' + TOKEN)
 
     updater.idle()
+
 
 if __name__ == '__main__':
     main()
