@@ -14,7 +14,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 # First time starting the bot
 def start(update, context):
     # format_user_data(update, context)
-    print("Here")
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Welcome to PayMeLah Bot! U+2728",
                              parse_mode='HTML')
@@ -34,6 +33,7 @@ def main():
     # dispatcher.add_handler(InlineQueryHandler(inlinequery))
     # dispatcher.add_handler(CallbackQueryHandler(callbackhandle))
     # dispatcher.add_handler(CommandHandler('help', help))
+    dispatcher.add_handler(CommandHandler('start', start))
 
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
