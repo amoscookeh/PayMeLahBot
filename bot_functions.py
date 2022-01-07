@@ -8,7 +8,7 @@ from tabscanner_functions import callProcess, callResult
 from helper_functions import format_line_items
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
-WEBAPP_LINK = 'http://google/split'
+WEBAPP_LINK = 'http://www.google.com/split'
 
 
 # First time starting the bot
