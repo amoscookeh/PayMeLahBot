@@ -1,7 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, \
     CallbackQueryHandler, DictPersistence
 import os
-from tabscanner_functions import callProcess
+from tabscanner_functions import callProcess, callResult
 
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
@@ -37,7 +37,10 @@ def parse_receipt(update, context):
                              parse_mode='HTML')
 
     output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
-    print(output)
+    status = output['status']
+    output_token = output['token']
+    result = callResult(TABSCANNER_TOKEN, output_token)
+    print(result)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start your bill splitting process here: \nLink Here",
                              parse_mode='HTML')

@@ -26,3 +26,16 @@ def callProcess(API_KEY, image_path):
         result = json.loads(response.text)
 
         return result
+
+
+def callResult(API_KEY, token):
+
+    url = "https://api.tabscanner.com/api/result/{0}"
+    endpoint = url.format(token)
+
+    headers = {'apikey':API_KEY}
+
+    response = requests.get(endpoint,headers=headers)
+    result = json.loads(response.text)
+
+    return result
