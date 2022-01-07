@@ -1,6 +1,5 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, \
     CallbackQueryHandler, DictPersistence
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
 from functions import start, ask_for_receipt, parse_receipt, cancel
 import os
 import logging
@@ -19,7 +18,7 @@ receipt_parsing = ConversationHandler(
     states={
         PARSE: [
             MessageHandler(
-                Filters.document.mime_type("image/jpg"), parse_receipt
+                Filters.document.mime_type("jpg"), parse_receipt
             )
         ],
     },
