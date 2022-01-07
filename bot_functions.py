@@ -107,7 +107,9 @@ def help(update, context):
                                   "After which, we will drop you a link to our bill splitting web application to continue"
                                   "the bill splitting process!"
                                   "\n\n<b>/split : </b>"
-                                  "Simply tap on the link sent to you and you can begin your bill splitting process!",
+                                  "Simply tap on the link sent to you and you can begin your bill splitting process!"
+                                  "\n\n<b>/cancel : </b>"
+                                  "Use this command to cancel any ongoing command!",
                              parse_mode='HTML')
 
 
