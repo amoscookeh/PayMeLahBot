@@ -32,29 +32,32 @@ def ask_for_receipt(update, context):
 def parse_receipt(update, context):
     receipt_photo = update.message.photo[0]
     file_id = receipt_photo.file_id
-    photo_file = context.bot.get_file(file_id).download("{}.jpg".format(file_id))
+    photo = context.bot.get_file(file_id)
+    photo_file = photo.download("{}.jpg".format(file_id))
+    print(photo.width)
+    print(photo.height)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Parsing receipt",
                              parse_mode='HTML')
 
-    output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
-    status = output['status']
-    output_token = output['token']
-    print(output)
-    time.sleep(7)
-    result = callResult(TABSCANNER_TOKEN, output_token)
-    while(result['status'] == 'pending'):
-        time.sleep(3)
-        result = callResult(TABSCANNER_TOKEN, output_token)
-    if (result['status'] == 'failed'):
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="Image parsing failed",
-                                 parse_mode='HTML')
-    else:
-        print(result)
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Start your bill splitting process here: \nLink Here",
-                             parse_mode='HTML')
+    # output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
+    # status = output['status']
+    # output_token = output['token']
+    # print(output)
+    # time.sleep(7)
+    # result = callResult(TABSCANNER_TOKEN, output_token)
+    # while(result['status'] == 'pending'):
+    #     time.sleep(3)
+    #     result = callResult(TABSCANNER_TOKEN, output_token)
+    # if (result['status'] == 'failed'):
+    #     context.bot.send_message(chat_id=update.effective_chat.id,
+    #                              text="Image parsing failed",
+    #                              parse_mode='HTML')
+    # else:
+    #     print(result)
+    #     context.bot.send_message(chat_id=update.effective_chat.id,
+    #                          text="Start your bill splitting process here: \nLink Here",
+    #                          parse_mode='HTML')
     return ConversationHandler.END
 
 
