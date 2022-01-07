@@ -194,3 +194,7 @@ def manage_query(update, context):
         ask_for_receipt(update, context)
     else:
         parse_receipts(update, context)
+
+    context.bot.edit_reply_markup(chat_id=update.effective_chat.id,
+                                  message_id=query.message.message_id,
+                                  reply_markup=InlineKeyboardMarkup([]))
