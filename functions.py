@@ -26,7 +26,7 @@ def ask_for_receipt(update, context):
 def parse_receipt(update, context):
     print(update.message.photo)
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Start your bill splitting process here: \n<Link>",
+                             text="Start your bill splitting process here: \nLink Here",
                              parse_mode='HTML')
     return ConversationHandler.END
 
