@@ -28,7 +28,10 @@ def ask_for_receipt(update, context):
 
 
 def parse_receipt(update, context):
-    print(update.message.photo)
+    receipt_photo = update.message.photo
+    file_id = receipt_photo.file_id
+    photo_file = context.bot.get_file(file_id).download("{}.jpg".format(file_id))
+    print(photo_file)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start your bill splitting process here: \nLink Here",
                              parse_mode='HTML')
