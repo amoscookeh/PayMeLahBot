@@ -14,11 +14,9 @@ def callProcess(API_KEY, image_path):
     print("receipt_image: " + receipt_image)
 
     payload = {"documentType":"receipt"}
-    print("payload: " + payload)
     files = {'file': open(receipt_image)}
-    print("files: " + files)
+    print(files['file'])
     headers = {'apikey':API_KEY}
-    print("headers: " + headers)
 
     print(endpoint)
 
