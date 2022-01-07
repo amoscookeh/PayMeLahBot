@@ -11,19 +11,18 @@ def callProcess(API_KEY, image_path):
 
     endpoint = "https://api.tabscanner.com/api/2/process"
     receipt_image = image_path
-    print("receipt_image: " + receipt_image)
 
     payload = {"documentType":"receipt"}
-    files = {'file': open(receipt_image, encoding="utf8", errors='ignore')}
-    print(files['file'])
-    headers = {'apikey':API_KEY}
+    with open(receipt_image, 'rb') as R:
+        files = {'file': R}
+        headers = {'apikey':API_KEY}
 
-    print(endpoint)
+        print(files)
 
-    response = requests.post( endpoint,
-                              files=files,
-                              data=payload,
-                              headers=headers)
-    result = json.loads(response.text)
+        response = requests.post( endpoint,
+                                  files=files,
+                                  data=payload,
+                                  headers=headers)
+        result = json.loads(response.text)
 
-    return result
+        return result
