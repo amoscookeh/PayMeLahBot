@@ -2,6 +2,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
     CallbackQueryHandler, DictPersistence
 import os
 from tabscanner_functions import callProcess, callResult
+import time
 
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
@@ -39,9 +40,18 @@ def parse_receipt(update, context):
     output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
     status = output['status']
     output_token = output['token']
+    time.sleep(5)
     result = callResult(TABSCANNER_TOKEN, output_token)
-    print(result)
-    context.bot.send_message(chat_id=update.effective_chat.id,
+    while(result['status'] == 'pending'):
+        time.sleep(3)
+        result = callResult(TABSCANNER_TOKEN, output_token)
+    if (result['status'] == 'failed'):
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Image parsing failed",
+                                 parse_mode='HTML')
+    else:
+        print(result)
+        context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start your bill splitting process here: \nLink Here",
                              parse_mode='HTML')
     return ConversationHandler.END
