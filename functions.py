@@ -31,36 +31,35 @@ def ask_for_receipt(update, context):
 
 def parse_receipt(update, context):
     receipt_photo = update.message.photo[-1]
-    print(receipt_photo)
-    # file_id = receipt_photo.file_id
-    # photo = context.bot.get_file(file_id)
-    # photo_file = photo.download("{}.jpg".format(file_id))
-    # context.bot.send_message(chat_id=update.effective_chat.id,
-    #                          text="Parsing receipt",
-    #                          parse_mode='HTML')
-    #
+    file_id = receipt_photo.file_id
+    photo = context.bot.get_file(file_id)
+    photo_file = photo.download("{}.jpg".format(file_id))
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="Parsing receipt",
+                             parse_mode='HTML')
+
     # with open("{}.jpg".format(file_id)) as R:
     #     context.bot.send_document(chat_id=update.effective_chat.id,
     #                          document=R.read())
 
-    # output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
-    # status = output['status']
-    # output_token = output['token']
-    # print(output)
-    # time.sleep(7)
-    # result = callResult(TABSCANNER_TOKEN, output_token)
-    # while(result['status'] == 'pending'):
-    #     time.sleep(3)
-    #     result = callResult(TABSCANNER_TOKEN, output_token)
-    # if (result['status'] == 'failed'):
-    #     context.bot.send_message(chat_id=update.effective_chat.id,
-    #                              text="Image parsing failed",
-    #                              parse_mode='HTML')
-    # else:
-    #     print(result)
-    #     context.bot.send_message(chat_id=update.effective_chat.id,
-    #                          text="Start your bill splitting process here: \nLink Here",
-    #                          parse_mode='HTML')
+    output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
+    status = output['status']
+    output_token = output['token']
+    print(output)
+    time.sleep(7)
+    result = callResult(TABSCANNER_TOKEN, output_token)
+    while(result['status'] == 'pending'):
+        time.sleep(3)
+        result = callResult(TABSCANNER_TOKEN, output_token)
+    if (result['status'] == 'failed'):
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Image parsing failed",
+                                 parse_mode='HTML')
+    else:
+        print(result)
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="Start your bill splitting process here: \nLink Here",
+                             parse_mode='HTML')
     return ConversationHandler.END
 
 
