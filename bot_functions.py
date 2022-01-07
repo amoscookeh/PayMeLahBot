@@ -64,7 +64,7 @@ def parse_receipt(update, context):
         encoded_utf = stringified_data.encode('utf-8')
         encoded_base64 = base64.b64encode(encoded_utf)
         url = "{}/{}".format(WEBAPP_LINK, str(encoded_base64)[2:-1])
-        message = "<i>Start your bill splitting process</i> <a href='{}'>here</a>".format(url)
+        message = "Start your bill splitting process <a href='{}'>here</a>".format(url)
         print(message)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text=message,
