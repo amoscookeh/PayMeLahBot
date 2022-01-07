@@ -40,7 +40,8 @@ def parse_receipt(update, context):
     output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
     status = output['status']
     output_token = output['token']
-    time.sleep(5)
+    print(output)
+    time.sleep(7)
     result = callResult(TABSCANNER_TOKEN, output_token)
     while(result['status'] == 'pending'):
         time.sleep(3)
