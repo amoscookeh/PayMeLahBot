@@ -62,9 +62,10 @@ def parse_receipt(update, context):
             'users': [update.effective_user.username]
         }
         stringified_data = json.dumps(data)
-        encoded_data = base64.b64encode(stringified_data)
+        encoded_utf = stringified_data.encode('utf-8')
+        encoded_base64 = base64.b64encode(encoded_utf)
         context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Start your bill splitting process here: \n{}/${}".format(WEBAPP_LINK, encoded_data),
+                             text="Start your bill splitting process here: \n{}/${}".format(WEBAPP_LINK, encoded_base64),
                              parse_mode='HTML')
     return ConversationHandler.END
 
