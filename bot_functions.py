@@ -24,7 +24,7 @@ def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start the bill splitting process with one of the following commands: "
                                   + "\n\n/upload {} - Upload a receipt image to be parsed"
-                                  + "\n/split {} - Begin bill splitting without receipt parsing").format(receipt_emoji, divide_emoji)
+                                  + "\n/split {} - Begin bill splitting without receipt parsing".format(receipt_emoji, divide_emoji))
     countdown(update, context, 5)
 
 PARSE = range(1)
