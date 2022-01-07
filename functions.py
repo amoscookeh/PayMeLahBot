@@ -1,5 +1,9 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, \
     CallbackQueryHandler, DictPersistence
+import os
+
+
+TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
 
 
 # First time starting the bot
