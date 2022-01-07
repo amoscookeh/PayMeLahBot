@@ -14,7 +14,7 @@ WEBAPP_LINK = 'http://www.google.com/split'
 # First time starting the bot
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Welcome to PayMeLah Bot!",
+                             text="<p>Welcome to 💰PayMeLah Bot💰!</p>",
                              parse_mode='HTML')
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start the bill splitting process with one of the following commands: "
