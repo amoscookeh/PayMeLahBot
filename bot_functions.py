@@ -25,9 +25,8 @@ def start(update, context):
                                                                                money_emoji, money_emoji))
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start the bill splitting process with one of the following commands: "
-                                  + "\n\n/upload {} - Upload a receipt image to be parsed"
-                                  + "\n/split {} - Begin bill splitting without receipt parsing".format(receipt_emoji,
-                                                                                                        divide_emoji))
+                                  + "\n\n/upload {} - Upload a receipt image to be parsed".format(receipt_emoji)
+                                  + "\n/split {} - Begin bill splitting without receipt parsing".format(divide_emoji))
 
 
 PARSE = range(1)
@@ -98,6 +97,18 @@ def cancel(update, context):
                              text="Upload cancelled",
                              parse_mode='HTML')
     return ConversationHandler.END
+
+
+def help(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="<b>Welcome to PayMeLah Bot!\n\nThere are 2 simple ways "
+                                  "to get me to help you! </b>\n\n<b>/upload : </b>"
+                                  "Upload an image of the receipt that you wish to split and let us parse it for you! "
+                                  "After which, we will drop you a link to our bill splitting web application to continue"
+                                  "the bill splitting process!"
+                                  "\n\n<b>/split : </b>"
+                                  "Simply tap on the link sent to you and you can begin your bill splitting process!",
+                             parse_mode='HTML')
 
 
 def countdown(update, context, seconds):
