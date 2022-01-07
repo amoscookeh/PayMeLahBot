@@ -49,10 +49,16 @@ def parse_receipt(update, context):
     status = output['status']
     output_token = output['token']
 
-    time.sleep(7)
+    if (status != 'success'):
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Image parsing failed {}".format(sad_shocked_emoji),
+                                 parse_mode='HTML')
+
+    countdown(update, context, 7)
+
     result = callResult(TABSCANNER_TOKEN, output_token)
     while (result['status'] == 'pending'):
-        time.sleep(3)
+        time.sleep(2)
         result = callResult(TABSCANNER_TOKEN, output_token)
     if (result['status'] == 'failed'):
         context.bot.send_message(chat_id=update.effective_chat.id,
@@ -85,13 +91,13 @@ def cancel(update, context):
 def countdown(update, context, seconds):
     timer = seconds
     sent_message = context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="{} seconds remaining...".format(timer),
+                             text="{}".format(hourglass_emoji * timer),
                              parse_mode='HTML')
     message_id = sent_message.message_id
     while (timer > 0):
         time.sleep(1)
         timer -= 1
-        context.bot.edit_message_text("{} seconds remaining...".format(timer),
+        context.bot.edit_message_text("{}".format(hourglass_emoji * timer),
                                       chat_id=update.effective_chat.id
                                       ,message_id=message_id)
     context.bot.delete_message(chat_id=update.effective_chat.id, message_id=message_id)
