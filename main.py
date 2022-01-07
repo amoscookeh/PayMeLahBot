@@ -1,5 +1,5 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-from bot_functions import start, ask_for_receipt, parse_receipts, split, cancel, help, add_receipts
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
+from bot_functions import start, ask_for_receipt, parse_receipts, split, cancel, help, add_receipts, manage_query
 import os
 import logging
 
@@ -38,6 +38,7 @@ def main():
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('split', split))
     dispatcher.add_handler(CommandHandler('help', help))
+    updater.dispatcher.add_handler(CallbackQueryHandler(manage_query))
 
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),

@@ -55,15 +55,6 @@ def add_receipts(update, context):
                              text="Do you wish to upload another receipt?",
                              reply_markup=add_suggested_actions(update, context))
 
-    response = update.callback_query.data
-    if (response == 'y'):
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="Please send me another clear image of your {} Receipt {}".format(receipt_emoji,
-                                                                                                  receipt_emoji))
-        return ADDING
-
-    return PARSE
-
 
 def parse_receipts(update, context):
     photos = context.user_data["receipts"]
@@ -186,3 +177,16 @@ def add_suggested_actions(update, context):
 
     reply_markup = InlineKeyboardMarkup([options])
     return reply_markup
+
+
+def manage_query(update, context):
+    query = update.callback_query
+    query.answer()
+
+    if (query.data == 'y'):
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Please send me another clear image of your {} Receipt {}".format(receipt_emoji,
+                                                                                                        receipt_emoji))
+        add_receipts(update, context)
+    else:
+        parse_receipts(update, context)
