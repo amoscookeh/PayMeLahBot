@@ -36,10 +36,17 @@ ADDING, PARSE = range(2)
 
 
 def ask_for_receipt(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Please send me a clear image of your {} Receipt {}".format(receipt_emoji,
-                                                                                              receipt_emoji))
-    context.user_data["receipts"] = []
+    user_data = context.user_data
+    if "receipts" in user_data:
+        receipts = context.user_data["receipts"]
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Please send me a clear image of the next {} Receipt {}".format(receipt_emoji,
+                                                                                                  receipt_emoji))
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Please send me a clear image of your {} Receipt {}".format(receipt_emoji,
+                                                                                                  receipt_emoji))
+        context.user_data["receipts"] = []
     return ADDING
 
 
