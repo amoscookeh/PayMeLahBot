@@ -112,6 +112,8 @@ def parse_receipts(update, context):
         'users': [update.effective_user.username]
     }
 
+    print(data['lineItems'])
+
     stringified_data = json.dumps(data)
     encoded_utf = stringified_data.encode('utf-8')
     encoded_base64 = base64.b64encode(encoded_utf)
