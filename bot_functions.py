@@ -14,8 +14,8 @@ WEBAPP_LINK = 'http://www.google.com/split'
 # First time starting the bot
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="<p>Welcome to 💰PayMeLah Bot💰!</p>",
-                             parse_mode='HTML')
+                             text="Welcome to PayMeLah Bot! {}{}{}{}{}".format(u'\U+1F4B8', u'\U+1F4B8', u'\U+1F4B8',
+                                                                               u'\U+1F4B8', u'\U+1F4B8'))
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Start the bill splitting process with one of the following commands: "
                                   + "\n\n/upload - Upload a receipt image to be parsed"
@@ -65,7 +65,6 @@ def parse_receipt(update, context):
         encoded_base64 = base64.b64encode(encoded_utf)
         url = "{}/{}".format(WEBAPP_LINK, str(encoded_base64)[2:-1])
         message = "Start your bill splitting process <a href='{}'>here</a>".format(url)
-        print(message)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text=message,
                                  parse_mode=ParseMode.HTML)
