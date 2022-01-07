@@ -14,7 +14,7 @@ def callProcess(API_KEY, image_path):
     print("receipt_image: " + receipt_image)
 
     payload = {"documentType":"receipt"}
-    files = {'file': open(receipt_image)}
+    files = {'file': open(receipt_image, encoding="utf8", errors='ignore')}
     print(files['file'])
     headers = {'apikey':API_KEY}
 
