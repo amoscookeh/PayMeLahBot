@@ -1,5 +1,5 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-from bot_functions import start, ask_for_receipt, parse_receipt, split, cancel, help, add_more
+from bot_functions import start, ask_for_receipt, parse_receipts, split, cancel, help, add_receipts
 import os
 import logging
 
@@ -10,18 +10,18 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 # Receipt Parsing Conversation
-PARSE, ADDMORE = range(2)
+ADDING, PARSE = range(2)
 receipt_parsing = ConversationHandler(
     entry_points=[CommandHandler('upload', ask_for_receipt)],
     states={
-        PARSE: [
+        ADDING: [
             MessageHandler(
-                Filters.photo, parse_receipt
+                Filters.photo, add_receipts
             )
         ],
-        ADDMORE: [
+        PARSE: [
             MessageHandler(
-                Filters.text & (~Filters.command), add_more
+                Filters.text & (~Filters.command), parse_receipts
             )
         ],
     },

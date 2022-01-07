@@ -32,7 +32,7 @@ def start(update, context):
                                   + "\n/split {} - Begin bill splitting without receipt parsing".format(divide_emoji))
 
 
-PARSE, ADDMORE = range(2)
+ADDING, PARSE = range(2)
 
 
 def ask_for_receipt(update, context):
@@ -40,10 +40,10 @@ def ask_for_receipt(update, context):
                              text="Please send me a clear image of your {} Receipt {}".format(receipt_emoji,
                                                                                               receipt_emoji))
     context.user_data["receipts"] = []
-    return PARSE
+    return ADDING
 
 
-def parse_receipt(update, context):
+def add_receipts(update, context):
     receipt_photo = update.message.photo[-1]
     file_id = receipt_photo.file_id
 
@@ -55,14 +55,17 @@ def parse_receipt(update, context):
                              text="Do you wish to upload another receipt?",
                              reply_markup=add_suggested_actions(update, context))
 
-    return ADDMORE
-
-
-def add_more(update, context):
     response = update.callback_query.data
     if (response == 'y'):
-        return PARSE
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Please send me another clear image of your {} Receipt {}".format(receipt_emoji,
+                                                                                                  receipt_emoji))
+        return ADDING
 
+    return PARSE
+
+
+def parse_receipts(update, context):
     photos = context.user_data["receipts"]
     output_tokens = []
     compiled_line_items = []
