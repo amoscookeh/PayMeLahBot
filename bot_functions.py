@@ -1,11 +1,15 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, \
     CallbackQueryHandler, DictPersistence
 import os
-from tabscanner_functions import callProcess, callResult
 import time
+import json
+import base64
+from tabscanner_functions import callProcess, callResult
+from helper_functions import format_line_items
 
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
+WEBAPP_LINK = 'localhost:3000/split/'
 
 
 # First time starting the bot
@@ -38,14 +42,10 @@ def parse_receipt(update, context):
                              text="Parsing receipt",
                              parse_mode='HTML')
 
-    # with open("{}.jpg".format(file_id)) as R:
-    #     context.bot.send_document(chat_id=update.effective_chat.id,
-    #                          document=R.read())
-
     output = callProcess(TABSCANNER_TOKEN, "{}.jpg".format(file_id))
     status = output['status']
     output_token = output['token']
-    print(output)
+
     time.sleep(7)
     result = callResult(TABSCANNER_TOKEN, output_token)
     while(result['status'] == 'pending'):
@@ -56,9 +56,15 @@ def parse_receipt(update, context):
                                  text="Image parsing failed",
                                  parse_mode='HTML')
     else:
-        print(result)
+        data = {
+            'lineItems': format_line_items(result),
+            'chatId': update.effective_chat.id,
+            'users': [update.effective_user.username]
+        }
+        stringified_data = json.dumps(data)
+        encoded_data = base64.b64encode(stringified_data)
         context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="Start your bill splitting process here: \nLink Here",
+                             text="Start your bill splitting process here: \n{}/${}".format(WEBAPP_LINK, encoded_data),
                              parse_mode='HTML')
     return ConversationHandler.END
 

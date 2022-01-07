@@ -1,6 +1,6 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, InlineQueryHandler, \
     CallbackQueryHandler, DictPersistence
-from functions import start, ask_for_receipt, parse_receipt, cancel
+from bot_functions import start, ask_for_receipt, parse_receipt, cancel
 import os
 import logging
 
