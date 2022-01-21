@@ -223,7 +223,7 @@ def manage_query(update, context):
 def msg_amos(context):
     print("Fetching global data")
     data = get_total_activity()
-    message = "Total Activity: " + data.total_usage + "\nUnique Users: " + data.unique_users
+    message = "Total Activity: " + data["total_usage"] + "\nUnique Users: " + data["unique_users"]
 
     sent_message = context.bot.send_message(chat_id="26206762", text=message)
 
