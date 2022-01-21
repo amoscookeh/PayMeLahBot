@@ -23,7 +23,7 @@ def create_new_user_record(username):
 
 
 def add_receipt_data(username, receipt_data):
-    response = collection.updateOne(
+    response = collection.update_one(
         {"_id": username},
         {"$push": {"receipt_data": receipt_data}}
     )
@@ -39,7 +39,7 @@ def find_user(username):
 
 
 def update_user_activity(username):
-    response = collection.updateOne(
+    response = collection.update_one(
         { "_id": username },
         { "$inc": { "activity_count": 1 } }
     )
@@ -47,7 +47,7 @@ def update_user_activity(username):
 
 
 def update_total_activity():
-    response = collection.updateOne(
+    response = collection.update_one(
         { "_id": "global" },
         { "$inc": { "total_usage": 1 } }
     )
@@ -55,7 +55,7 @@ def update_total_activity():
 
 
 def update_unique_user():
-    response = collection.updateOne(
+    response = collection.update_one(
         { "_id": "global" },
         { "$inc": { "unique_user": 1 } }
     )
