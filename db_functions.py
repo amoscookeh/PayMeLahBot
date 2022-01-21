@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from datetime import date
 import os
 
 PASSWORD = os.environ['MONGO_PASSWORD']
@@ -23,9 +24,13 @@ def create_new_user_record(username):
 
 
 def add_receipt_data(username, receipt_data):
+    data = {
+        str(date.today()): receipt_data
+    }
+
     response = collection.update_one(
         {"_id": username},
-        {"$push": {"receipt_data": receipt_data}}
+        {"$push": {"receipt_data": data}}
     )
     print(response)
 
