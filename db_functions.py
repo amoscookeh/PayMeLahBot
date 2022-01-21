@@ -31,7 +31,7 @@ def add_receipt_data(username, receipt_data):
 
 
 def user_exists(username):
-    return collection.find({'_id': {"$in": username}}).count() > 0
+    return collection.count_documents({"_id": username}) > 0
 
 
 def find_user(username):
