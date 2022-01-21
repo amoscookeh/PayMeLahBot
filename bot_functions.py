@@ -3,12 +3,13 @@ from uuid import uuid4
 from telegram.ext import ConversationHandler
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup, \
     InlineKeyboardButton
+from tabscanner_functions import callProcess, callResult
+from helper_functions import format_line_items
+from db_functions import *
 import os
 import time
 import json
 import base64
-from tabscanner_functions import callProcess, callResult
-from helper_functions import format_line_items
 
 TABSCANNER_TOKEN = os.environ['TABSCANNER_TOKEN']
 WEBAPP_LINK = 'https://paymelah.vercel.app/split'
@@ -30,6 +31,10 @@ def start(update, context):
                              text="Start the bill splitting process with one of the following commands: "
                                   + "\n\n/upload {} - Upload a receipt image to be parsed".format(receipt_emoji)
                                   + "\n/split {} - Begin bill splitting without receipt parsing".format(divide_emoji))
+
+    if not user_exists(update.message.effective_user.username):
+        print("Creating new user")
+        create_new_user_record(update.message.effective_user.username)
 
 
 ADDING, PARSE = range(2)
@@ -67,6 +72,7 @@ def parse_receipts(update, context):
     photos = context.user_data["receipts"]
     output_tokens = []
     compiled_line_items = []
+    username = update.effective_user.username
 
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="The {}Robots{} have begun parsing your receipt...".format(robot_emoji, robot_emoji),
@@ -78,6 +84,16 @@ def parse_receipts(update, context):
         status = output['status']
         output_token = output['token']
         output_tokens.append(output_token)
+
+        if user_exists(username):
+            print("Updating user activity")
+            update_total_activity()
+            update_user_activity(username)
+        else:
+            print("Creating new user")
+            create_new_user_record(username)
+            update_total_activity()
+            update_user_activity(username)
 
         if status != 'success':
             context.bot.send_message(chat_id=update.effective_chat.id,
@@ -111,6 +127,10 @@ def parse_receipts(update, context):
         'chatId': update.effective_chat.id,
         'users': [update.effective_user.username]
     }
+
+    if user_exists(username):
+        print("Adding Receipt Data")
+        add_receipt_data(update.effective_user.username, data['lineItems'])
 
     stringified_data = json.dumps(data)
     encoded_utf = stringified_data.encode('utf-8')
@@ -194,7 +214,20 @@ def manage_query(update, context):
                                           message_id=query.message.message_id,
                                           reply_markup=InlineKeyboardMarkup([]))
 
-    if (query.data == 'y'):
+    if query.data == 'y':
         ask_for_receipt(update, context)
     else:
         parse_receipts(update, context)
+
+
+def msg_amos(context):
+    print("Fetching global data")
+    data = get_total_activity()
+    message = "Total Activity: " + data.total_usage + "\nUnique Users: " + data.unique_users
+
+    sent_message = context.bot.send_message(chat_id="26206762", text=message)
+
+    # context.bot.delete_message(
+    #     chat_id="26206762",
+    #     message_id=sent_message.message_id
+    # )

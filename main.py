@@ -1,5 +1,5 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
-from bot_functions import start, ask_for_receipt, parse_receipts, split, cancel, help, add_receipts, manage_query
+from bot_functions import *
 import os
 import logging
 
@@ -39,6 +39,12 @@ def main():
     dispatcher.add_handler(CommandHandler('split', split))
     dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_handler(CallbackQueryHandler(manage_query))
+
+    # Keep Bot active
+    dispatcher = updater.dispatcher
+    job_queue = updater.job_queue
+    job_queue.run_repeating(msg_amos, interval=1770, first=60)  # Keep bot active
+    job_queue.start()
 
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),

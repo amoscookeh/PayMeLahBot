@@ -12,3 +12,4 @@ tornado==6.1
 tzlocal==2.1
 requests==2.27.1
 python-dotenv==0.19.2
+pymongo==4.0.1
