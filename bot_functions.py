@@ -24,6 +24,7 @@ robot_emoji = '\U0001F916'
 
 # First time starting the bot
 def start(update, context):
+    username = update.effective_user.username
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Welcome to PayMeLah Bot! {}{}{}{}{}".format(money_emoji, money_emoji, money_emoji,
                                                                                money_emoji, money_emoji))
@@ -32,9 +33,9 @@ def start(update, context):
                                   + "\n\n/upload {} - Upload a receipt image to be parsed".format(receipt_emoji)
                                   + "\n/split {} - Begin bill splitting without receipt parsing".format(divide_emoji))
 
-    if not user_exists(update.message.effective_user.username):
+    if not user_exists(username):
         print("Creating new user")
-        create_new_user_record(update.message.effective_user.username)
+        create_new_user_record(username)
 
 
 ADDING, PARSE = range(2)
