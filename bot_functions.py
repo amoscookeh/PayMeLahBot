@@ -5,6 +5,7 @@ from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageConten
     InlineKeyboardButton
 from tabscanner_functions import callProcess, callResult
 from helper_functions import format_line_items
+from datetime import datetime
 from db_functions import *
 import os
 import time
@@ -224,7 +225,9 @@ def manage_query(update, context):
 def msg_amos(context):
     print("Fetching global data")
     data = get_total_activity()
-    message = "Total Activity: " + str(data["total_usage"]) + "\nUnique Users: " + str(data["unique_users"])
+    now = datetime.now()
+    now_str = now.strftime("%d/%m/%Y %H:%M:%S")
+    message = "---" + now_str + "---\n\nTotal Activity: " + str(data["total_usage"]) + "\nUnique Users: " + str(data["unique_user"])
 
     sent_message = context.bot.send_message(chat_id="26206762", text=message)
 
