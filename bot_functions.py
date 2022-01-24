@@ -38,6 +38,9 @@ def start(update, context):
         print("Creating new user")
         create_new_user_record(username)
 
+        message = "User @{} has joined!".format(username)
+        send_msg(context, "26206762", message)
+
 
 ADDING, PARSE = range(2)
 
@@ -48,7 +51,7 @@ def ask_for_receipt(update, context):
         receipts = context.user_data["receipts"]
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="Please send me a clear image of the next {} Receipt {}".format(receipt_emoji,
-                                                                                                  receipt_emoji))
+                                                                                                      receipt_emoji))
     else:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="Please send me a clear image of your {} Receipt {}".format(receipt_emoji,
@@ -91,11 +94,17 @@ def parse_receipts(update, context):
             print("Updating user activity")
             update_total_activity()
             update_user_activity(username)
+
+            message = "User @{} is parsing a receipt!".format(username)
+            send_msg(context, "26206762", message)
         else:
             print("Creating new user")
             create_new_user_record(username)
             update_total_activity()
             update_user_activity(username)
+
+            message = "User @{} has joined and is parsing!".format(username)
+            send_msg(context, "26206762", message)
 
         if status != 'success':
             context.bot.send_message(chat_id=update.effective_chat.id,
@@ -133,6 +142,9 @@ def parse_receipts(update, context):
     if user_exists(username):
         print("Adding Receipt Data")
         add_receipt_data(update.effective_user.username, data['lineItems'])
+
+        message = "User @{} has successfully parsed a receipt!".format(username)
+        send_msg(context, "26206762", message)
 
     stringified_data = json.dumps(data)
     encoded_utf = stringified_data.encode('utf-8')
@@ -225,13 +237,18 @@ def manage_query(update, context):
 def msg_amos(context):
     print("Fetching global data")
     data = get_total_activity()
-    now = datetime.now()
-    now_str = now.strftime("%d/%m/%Y %H:%M:%S")
-    message = "---" + now_str + "---\n\nTotal Activity: " + str(data["total_usage"]) + "\nUnique Users: " + str(data["unique_user"])
+    message = "Total Activity: " + str(data["total_usage"]) + "\nUnique Users: " + str(data["unique_user"])
 
-    sent_message = context.bot.send_message(chat_id="26206762", text=message)
+    send_msg(context, "26206762", message)
 
     # context.bot.delete_message(
     #     chat_id="26206762",
     #     message_id=sent_message.message_id
     # )
+
+
+def send_msg(context, chat_id, msg):
+    now = datetime.now()
+    now_str = now.strftime("%d/%m/%Y %H:%M:%S")
+    msg = "---" + now_str + "---\n\n" + msg
+    sent_message = context.bot.send_message(chat_id=chat_id, text=msg)
